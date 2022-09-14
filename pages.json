@@ -1,6 +1,6 @@
 {
 	"pages": [{
-  
+
             "path" : "pages/home/home",
             "style" :
             {
@@ -42,23 +42,23 @@
       "root": "subpkg",
       "pages": [{
                     "path" : "good_detail/good_detail",
-                    "style" :                                                                                    
+                    "style" :
                 {
                     "navigationBarTitleText": "",
                     "enablePullDownRefresh": false
                 }
-                
+
                 }
                 ,{
                     "path" : "goods_list/goods_list",
-                    "style" :                                                                                    
+                    "style" :
                 {
                     "navigationBarTitleText": "",
                     "enablePullDownRefresh": false
                 }
-                
+
                 }
-            ] 
+            ]
     }
   ],
 	"globalStyle": {
@@ -67,7 +67,7 @@
 		"navigationBarBackgroundColor": "#C00000",
 		"backgroundColor": "#ffffff",
 		"app-plus": {
-			"background": "#efeff4"
+			"background": "#ffffff"
 		}
 	},
   "tabBar": {
