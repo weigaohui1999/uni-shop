@@ -58,6 +58,15 @@
                 }
 
                 }
+                ,{
+                    "path" : "search/search",
+                    "style" :
+                {
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+
+                }
             ]
     }
   ],
@@ -67,7 +76,7 @@
 		"navigationBarBackgroundColor": "#C00000",
 		"backgroundColor": "#ffffff",
 		"app-plus": {
-			"background": "#ffffff"
+			"background": "#efeff4"
 		}
 	},
   "tabBar": {

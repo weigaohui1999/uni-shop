@@ -1,5 +1,8 @@
 <template>
   <view>
+
+    <my-search @click="gotoSearch"/>
+
     <view class="scroll-view-container">
       <!--      左侧滑动-->
       <scroll-view class="left-scroll-view" scroll-y="true" :style="{height: windowHeight + 'px'}">
@@ -25,7 +28,9 @@
 </template>
 
 <script>
+  import MySearch from "../../components/my-search/my-search";
   export default {
+    components: {MySearch},
     data() {
       return {
         windowHeight: 0,
@@ -39,7 +44,7 @@
     onLoad() {
       this.getCateList()
       const systemInfo = uni.getSystemInfoSync()
-      this.windowHeight = systemInfo.windowHeight
+      this.windowHeight = systemInfo.windowHeight - 50
     },
     methods: {
       async getCateList() {
@@ -61,6 +66,11 @@
       gotoGoodsList(item) {
         uni.navigateTo({
           url: '/subpkg/goods_list/goods_list?cid=' + item.cat_id
+        })
+      },
+      gotoSearch() {
+        uni.navigateTo({
+          url: '/subpkg/search/search'
         })
       }
     }
