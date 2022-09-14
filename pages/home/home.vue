@@ -31,7 +31,7 @@
             <image :src="item.product_list[0].image_src" class="nav-image" :style="{width: item.product_list[0].image_width + 'rpx'}" mode="widthFix"></image>
           </navigator>
           <view class="right-img-box">
-            <navigator class="right-img-item" v-for="(item2, index2) in item.product_list" :key="index2" v-if="index2 !== 0" :url="item2.product_list.url">
+            <navigator class="right-img-item" v-for="(item2, index2) in item.product_list" :key="index2" v-if="index2 !== 0" :url="item2.url">
               <image :src="item2.image_src" :style="{width: item2.image_width + 'rpx'}" mode="widthFix"></image>
             </navigator>
           </view>
@@ -71,7 +71,8 @@
         if(res.meta.status !== 200) return uni.$showMsg
         res.message.forEach(floor => {
           floor.product_list.forEach(prod =>{
-            prod.url = '/subpkg/goods_list/goods_list?' + prod.navigator_url.split('5')[1]
+            console.log(prod)
+            prod.url = '/subpkg/goods_list/goods_list?' + prod.navigator_url.split('?')[1]
           })
         })
         this.floorList = res.message
