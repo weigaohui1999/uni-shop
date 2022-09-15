@@ -71,7 +71,6 @@
         if(res.meta.status !== 200) return uni.$showMsg
         res.message.forEach(floor => {
           floor.product_list.forEach(prod =>{
-            console.log(prod)
             prod.url = '/subpkg/goods_list/goods_list?' + prod.navigator_url.split('?')[1]
           })
         })

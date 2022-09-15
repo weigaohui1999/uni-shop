@@ -9,8 +9,11 @@
 </template>
 
 <script>
+import myGoods from "../../components/my-goods/my-goods";
   export default {
-    components: {},
+    components: {
+      myGoods
+    },
 
     data() {
       return {
@@ -43,7 +46,7 @@
       this.total = 0
       this.isLoading = false
       this.goodsList = []
-      this.getGoodsList(()=> uni.stopPullDownRefresh())
+      this.getGoodsList(() => uni.stopPullDownRefresh())
     },
     methods: {
       async getGoodsList(cb) {
@@ -59,7 +62,7 @@
       },
       gotoGoodsDetail(goods) {
         uni.navigateTo({
-          uri: '/subpkg/good_detail/good_detail?goods_id=' + goods.goods_id
+          url: '/subpkg/goods_detail/goods_detail?goods_id=' + goods.goods_id
         })
       }
     }
