@@ -11,29 +11,118 @@
     </view>
 
     <!-- 结算按钮 -->
-    <view class="btn-settle">结算({{ checkedCount }})</view>
+    <view class="btn-settle"  @click="settlement">结算({{ checkedCount }})</view>
   </view>
 </template>
 
 <script>
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations, mapState} from 'vuex'
   export default {
     name:"my-settle",
     data() {
       return {
-
+        second: 3,
+        timer: null
       };
     },
     computed: {
       ...mapGetters('m_cart', ['checkedCount', 'total', 'checkGoodsAmount']),
+      // addstr 是详细的收货地址
+      ...mapGetters('m_user', ['addstr']),
+      ...mapState('m_user', ['token']),
       isFullCheck() {
         return this.total === this.checkedCount
       }
     },
     methods: {
-      ...mapMutations('m_cart', ['updateAllGoodsState']),
+      ...mapMutations('m_cart', ['updateAllGoodsState', 'updateRedirectInfo']),
       changeAllCheck() {
         this.updateAllGoodsState(!this.isFullCheck)
+      },
+      // 点击了结算按钮
+      settlement() {
+        // 1. 先判断是否勾选了要结算的商品
+        if (!this.checkedCount) return uni.$showMsg('请选择要结算的商品！')
+
+        // 2. 再判断用户是否选择了收货地址
+        if (!this.addstr) return uni.$showMsg('请选择收货地址！')
+
+        // 3. 最后判断用户是否登录了
+        if (!this.token) return this.delayNavigate()
+
+        this.payOrder()
+      },
+      async payOrder() {
+        const orderInfo = {
+          order_price: this.checkedCount,
+          consignee_addr: this.addstr,
+          goods: this.cart.filters(item => item.goods_state).map(x => ({
+            goods_id: x.goods_id, goods_number: x.goods_count, goods_price: x.goods_price
+          }))
+        }
+
+        // 1.2 发起请求创建订单
+        const { data: res } = await uni.$http.post('/api/public/v1/my/orders/create', orderInfo)
+        if (res.meta.status !== 200) return uni.$showMsg('创建订单失败！')
+        // 1.3 得到服务器响应的“订单编号”
+        const orderNumber = res.message.order_number
+        // 2. 订单预支付
+        // 2.1 发起请求获取订单的支付信息
+        const { data: res2 } = await uni.$http.post('/api/public/v1/my/orders/req_unifiedorder', { order_number: orderNumber })
+        // 2.2 预付订单生成失败
+        if (res2.meta.status !== 200) return uni.$showError('预付订单生成失败！')
+        // 2.3 得到订单支付相关的必要参数
+        const payInfo = res2.message.pay
+        // 3. 发起微信支付
+        // 3.1 调用 uni.requestPayment() 发起微信支付
+        const [err, succ] = await uni.requestPayment(payInfo)
+        // 3.2 未完成支付
+        if (err) return uni.$showMsg('订单未支付！')
+        // 3.3 完成了支付，进一步查询支付的结果
+        const { data: res3 } = await uni.$http.post('/api/public/v1/my/orders/chkOrder', { order_number: orderNumber        })
+        // 3.4 检测到订单未支付
+        if (res3.meta.status !== 200) return uni.$showMsg('订单未支付！')
+        // 3.5 检测到订单支付完成
+         uni.showToast({
+           title: '支付完成！',
+           icon: 'success'
+         })
+      },
+      delayNavigate() {
+        this.second = 3
+        this.showTips(this.second)
+        this.timer = setInterval(()=> {
+          this.second --
+          if(this.second <= 0) {
+            clearInterval(this.timer)
+            uni.switchTab({
+              url: '/pages/my/my',
+
+              // 页面跳转成功之后的回调函数
+              success: () => {
+                // 调用 vuex 的 updateRedirectInfo 方法，把跳转信息存储到 Store 中
+                this.updateRedirectInfo({
+                  // 跳转的方式
+                  openType: 'switchTab',
+                  // 从哪个页面跳转过去的
+                  from: '/pages/cart/cart'
+                })
+              }
+
+            })
+
+            return
+          }
+          this.showTips(this.second)
+        }, 1000)
+      },
+      showTips(n) {
+        uni.showToast({
+          icon: 'none',
+          content: '请登录后在结算！' + n + '秒后自动跳转到登录页',
+          mask: true,
+          duration: 1500
+        })
       }
     }
   }
