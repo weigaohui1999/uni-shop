@@ -12,7 +12,7 @@ $http.beforeRequest = function(options) {
   uni.showLoading({
     title: '数据加载中...'
   })
-  if(options.uri.indexOf('/my') !== -1) {
+  if(options.uri.indexOf('/my/') !== -1) {
     options.header = {
       Authorization: store.state.m_user.token,
     }

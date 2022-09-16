@@ -1,6 +1,6 @@
 {
-    "name" : "uni-shop",
-    "appid" : "",
+    "name" : "优购",
+    "appid" : "__UNI__C4EA08B",
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -49,11 +49,10 @@
     "quickapp" : {},
     /* 快应用特有相关 */
     "mp-weixin" : {
-        /* 小程序特有相关 */
         "appid" : "wxc54a7ac75d9c461b",
         "setting" : {
             "urlCheck" : false,
-            "checkSiteMap": false
+            "checkSiteMap" : false
         },
         "usingComponents" : true
     },
