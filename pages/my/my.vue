@@ -1,14 +1,16 @@
 <template>
   <view>
-    
+
   </view>
 </template>
 
 <script>
-  export default {
+import tabbarBadge from "@/mixins/tabbar-badge";
+export default {
+  mixins:[tabbarBadge],
     data() {
       return {
-        
+
       };
     }
   }

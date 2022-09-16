@@ -29,7 +29,9 @@
 
 <script>
   import MySearch from "../../components/my-search/my-search";
+  import tabbarBadge from "@/mixins/tabbar-badge";
   export default {
+    mixins:[tabbarBadge],
     components: {MySearch},
     data() {
       return {
